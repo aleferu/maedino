@@ -263,7 +263,7 @@ source .venv/bin/activate
 The project requires a CUDA-capable GPU. PyTorch is pulled from the CUDA 12.8 index automatically via `pyproject.toml`.
 
 Key dependencies:
-- `torch >= 2.11.0` (CUDA 12.8)
+- `torch >= 2.11.0` (CUDA 12.8, you might need to update `pyproject.toml with your CUDA version`)
 - `monai >= 1.5.2` — medical imaging transforms, losses, metrics
 - `timm >= 1.0.26` — pretrained ViT-Base MAE and DINO weights
 - `scikit-learn >= 1.8.0` — KFold cross-validation
