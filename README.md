@@ -28,9 +28,9 @@ The dataset consists of **48 4D volumes** (32 training + 16 test) from the Radbo
 - **Apparent Diffusion Coefficient (ADC):** Functional sequence sensitive to water diffusion, 2 × 2 × 4 mm. Useful for detecting dense/tumoral tissue.
 
 Ground-truth labels have three classes:
-- `0` — Background
-- `1` — Peripheral Zone (PZ)
-- `2` — Transitional Zone (TZ)
+- `0` - Background
+- `1` - Peripheral Zone (PZ)
+- `2` - Transitional Zone (TZ)
 
 Test labels are withheld by the Decathlon organisers.
 
@@ -121,11 +121,11 @@ Two additional ablations were run on `Exp_MAE_Frozen`:
 ## Results
 
 All metrics are reported as **mean ± std over 5 folds**. Metrics:
-- **Dice Label 1** — Dice coefficient for Peripheral Zone
-- **Dice Label 2** — Dice coefficient for Transitional Zone
-- **Mean Dice** — average of the two
-- **Mean IoU** — Intersection over Union (foreground classes)
-- **HD95** — 95th percentile Hausdorff Distance (mm), lower is better
+- **Dice Label 1** - Dice coefficient for Peripheral Zone
+- **Dice Label 2** - Dice coefficient for Transitional Zone
+- **Mean Dice** - average of the two
+- **Mean IoU** - Intersection over Union (foreground classes)
+- **HD95** - 95th percentile Hausdorff Distance (mm), lower is better
 
 ### Main experiments (`outputs_1_10_10/`)
 
@@ -162,7 +162,7 @@ All metrics are reported as **mean ± std over 5 folds**. Metrics:
 
 2. **MAE > DINO for this task.** MAE (Dice 0.5515) clearly outperforms DINO (Dice 0.4581) when used alone with frozen weights. MAE's pixel-reconstruction pretraining captures low-level texture and boundary information that transfers better to medical segmentation than DINO's semantic consistency objective.
 
-3. **TZ is easier to segment than PZ.** TZ Dice (~0.67) consistently exceeds PZ Dice (~0.43). Anatomically, TZ is a large, round, central gland with strong T2 contrast, while PZ is a thin crescent-shaped band — harder to delineate and more penalised by the Dice metric.
+3. **TZ is easier to segment than PZ.** TZ Dice (~0.67) consistently exceeds PZ Dice (~0.43). Anatomically, TZ is a large, round, central gland with strong T2 contrast, while PZ is a thin crescent-shaped band - harder to delineate and more penalised by the Dice metric.
 
 4. **Dual encoder doesn't help.** Concatenating MAE+DINO features (1536 dim) gives the decoder more parameters to learn with the same limited data, which hurts rather than helps.
 
@@ -198,15 +198,15 @@ Predictions from `Exp_MAE_Frozen` (fold 1). Blue = Transitional Zone (label 2), 
 
 Training loss (blue, left axis) and validation Mean Dice (orange, right axis) per fold:
 
-**Exp_MAE_Frozen** — stable convergence across all folds:
+**Exp_MAE_Frozen** - stable convergence across all folds:
 
 ![MAE training curves](figures/training_curves/Exp_MAE_Frozen.png)
 
-**Exp_Dino_Unfrozen** — performance collapse in several folds:
+**Exp_Dino_Unfrozen** - performance collapse in several folds:
 
 ![DINO unfrozen training curves](figures/training_curves/Exp_Dino_Unfrozen.png)
 
-**Exp_Both_Unfrozen** — worst overall; simultaneous fine-tuning of two ViT-Base models with 32 volumes:
+**Exp_Both_Unfrozen** - worst overall; simultaneous fine-tuning of two ViT-Base models with 32 volumes:
 
 ![Both unfrozen training curves](figures/training_curves/Exp_Both_Unfrozen.png)
 
@@ -264,10 +264,10 @@ The project requires a CUDA-capable GPU. PyTorch is pulled from the CUDA 12.8 in
 
 Key dependencies:
 - `torch >= 2.11.0` (CUDA 12.8, you might need to update `pyproject.toml with your CUDA version`)
-- `monai >= 1.5.2` — medical imaging transforms, losses, metrics
-- `timm >= 1.0.26` — pretrained ViT-Base MAE and DINO weights
-- `scikit-learn >= 1.8.0` — KFold cross-validation
-- `nibabel`, `simpleitk` — NIfTI I/O
+- `monai >= 1.5.2` - medical imaging transforms, losses, metrics
+- `timm >= 1.0.26` - pretrained ViT-Base MAE and DINO weights
+- `scikit-learn >= 1.8.0` - KFold cross-validation
+- `nibabel`, `simpleitk` - NIfTI I/O
 
 ---
 
