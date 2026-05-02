@@ -13,6 +13,30 @@ METRICS = ["mean_dice", "dice_label1", "dice_label2", "mean_iou", "hd95"]
 PRIMARY_METRIC = "mean_dice"
 LOWER_IS_BETTER = {"hd95"}
 
+_TAB10 = plt.cm.get_cmap("tab10").colors
+
+EXPERIMENT_COLORS: dict[str, tuple] = {
+    # MAE experiments
+    "Exp_MAE_Frozen":           _TAB10[0],
+    "Exp_MAE_Unfrozen":         _TAB10[1],
+    # DINO experiments
+    "Exp_Dino_Frozen":          _TAB10[2],
+    "Exp_Dino_Unfrozen":        _TAB10[3],
+    # Dual (Both) experiments
+    "Exp_Both_Frozen":          _TAB10[4],
+    "Exp_Both_Unfrozen":        _TAB10[5],
+    "Exp_MAE_Frozen_DINO_Un":   _TAB10[6],
+    "Exp_MAE_Un_DINO_Frozen":   _TAB10[7],
+}
+
+
+def exp_color(name: str) -> tuple:
+    """Returns the tab10 colour for a given experiment name.
+    Falls back to a deterministic tab10 index for unknown names."""
+    if name in EXPERIMENT_COLORS:
+        return EXPERIMENT_COLORS[name]
+    # Fallback: hash the name to a tab10 index
+    return _TAB10[hash(name) % 10]
 
 
 def load_results(outputs_dir: Path) -> pd.DataFrame:
@@ -63,7 +87,8 @@ def plot_experiment_comparison(stats: pd.DataFrame, metric: str, out_dir: Path) 
 
     fig, ax = plt.subplots(figsize=(max(8, len(exp_names) * 1.4), 5))
     x = np.arange(len(exp_names))
-    ax.bar(x, means, yerr=stds, capsize=5, color="steelblue", alpha=0.8)
+    colors = [exp_color(e) for e in exp_names]
+    ax.bar(x, means, yerr=stds, capsize=5, color=colors, alpha=0.8)
     ax.set_xticks(x)
     ax.set_xticklabels(exp_names, rotation=20, ha="right")
     ax.set_ylabel(metric)
@@ -89,8 +114,9 @@ def plot_per_fold(results: pd.DataFrame, stats: pd.DataFrame, metric: str, out_d
     for ax, fold in zip(axes, folds):
         fold_data = results[results["fold"] == fold].set_index("experiment")
         values = [fold_data.loc[e, metric] if e in fold_data.index else float("nan") for e in exp_order]
+        colors = [exp_color(e) for e in exp_order]
         x = np.arange(len(exp_order))
-        ax.bar(x, values, color="steelblue", alpha=0.8)
+        ax.bar(x, values, color=colors, alpha=0.8)
         ax.set_xticks(x)
         ax.set_xticklabels(exp_order, rotation=30, ha="right", fontsize=7)
         ax.set_title("Fold %d" % fold)
